@@ -1,0 +1,16 @@
+= Projetos - Processamento Digital de Imagens
+José Lenildo Fernandes Dantas Júnior <lenildo.ze@gmail.com>
+
+:toc: left
+:sectnums:
+== Projetos da Primeira Unidade
+
+== Manipulação de Pixels
+
+:sectnums:
+
+=== Negativo de uma região
+
+
+
+
