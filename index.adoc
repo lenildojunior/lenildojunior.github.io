@@ -1,6 +1,7 @@
 = Projetos - Processamento Digital de Imagens
 José Lenildo Fernandes Dantas Júnior <lenildo.ze@gmail.com>
 :toc: left
+:imagesdir: /image/
 
 == Projetos da Primeira Unidade
 
