@@ -243,7 +243,7 @@ O algoritmo deve ser capaz, além de contar a quantidade de objetos, determinar 
 
 A função _floodfill_ recebe como parâmetros,respectivamente, a matriz de pixels da imagem de entrada(_image_), a semente(_p_) e o valor a ser atribuído aos píxels com características comuns ao procurado. No caso deste exemplo, atribui-se o valor _"0"_ para que sejam preenchidos com a cor do fundo da imagem.
 
-O resultado desta funcionalidade pode ser observado com a execução do arquivo link:/source_codes/removeObjBorda.cpp
+O resultado desta funcionalidade pode ser observado com a execução do arquivo link:/source_codes/removeObjBorda.cpp[removeObjBorda.cpp]
 
 .Imagem de entrada após a remoção dos objetos das bordas
 image::/image/labeling.png[]
