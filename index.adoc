@@ -16,7 +16,7 @@ Este exercício tem como finalidade manipular uma determinada imagem de forma qu
 
 
 .Área criada com os pontos
-image::Retangulo.cpp[]
+image::Retangulo.png[]
 
 
 O conceito e negativo de uma imagem está atrelado ao fato de acessar os pixels da imagem e subtrair dele o valor máximo que ele pode assunmir. No caso deste exercício, estaremos utilizando uma imagem em tons de cinza com armazenamento de 1 byte, ou seja, cada pixel pode assumir valores entre 0 e 255. Com isso o negativo da imagem pode ser definido como
