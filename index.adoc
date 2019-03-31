@@ -1,6 +1,6 @@
 = Projetos - Processamento Digital de Imagens
 José Lenildo Fernandes Dantas Júnior <lenildo.ze@gmail.com>
-
+:toc: left
 
 == Projetos da Primeira Unidade
 
@@ -43,7 +43,7 @@ for(int i=p1x;i<p2x;i++){
   }
 ----
 
-O resultado da execução deste programa pode ser visto abaixo
+O resultado da execução do programa link::/source_codes/regions.cpp[regions.cpp] pode ser visto abaixo
 
 
 .Imagem utilizada na execução do programa
@@ -58,6 +58,111 @@ image::execucaoRegions.png[]
 image::bielnegativo.png[]
 
 
+=== Troca de Regiões
 
+Este exercício tem como finalidade colocar em prática o conceito inicial de *_regiões_de_interesse(roi)_*, tornando possível criar um programa capaz de realizar a troca dos quadrantes de uma imagem. Neste exemplo, serão criadas 4 regiões de interesse de forma que, ao final do programa possa ser realizada a troca de cada região pela sua diagonal.
 
+.Divisão das regiões da imagem
+image::regioesnomeadas.png[]
+
+Inicialmente, realiza-se a leitura de uma imagem a ser processada pelo programa em duas variáveis do tipo *_Mat_* distintas, de forma que na primeira serão definidas as regiões de interesse que serão copiadas para a segunda.
+
+[source,cpp]
+----
+ image= imread("biel.png",CV_LOAD_IMAGE_GRAYSCALE);
+ newImage= imread("biel.png",CV_LOAD_IMAGE_GRAYSCALE);
+----
+
+_Obs: Como a variável *newImage* é igual a *image* também é possível criar uma cópia com a função *clone()*, pois o importante é obtermos uma matriz de dimensões equivalentes a da imagem original para a cópia das regiões_
+
+As regiões de interesse foram definidas utilizando um construtor específico da https://docs.opencv.org/3.1.0/d3/d63/classcv_1_1Mat.html[Classe Mat]
+
+[source,cpp]
+----
+ Mat (const Mat &m, const Rect &roi)
+----
+
+que possui como parâmetros, respectivamente, um objeto da classe _Mat_ e um objeto da classe _Rect_, sendo este último o responsável por informar a região de interesse da imagem _m_.
+
+O primeiro passo é criar quatro objetos da classe _Rect_, referentes as quatro regiões de interesse da imagem, passando como parâmetros as duas coordenadas _x_ e _y_ que delimitarão a área desejada.
+
+.Criação da área desejada para a Região de interesse
+[source,cpp]
+----
+ Rect regA(0,0,image.cols/2,image.rows/2);
+ Rect regB(image.cols/2,0,image.cols,image.rows/2);
+ Rect regC(0,image.rows/2,image.cols/2,image.rows);
+ Rect regD(image.cols/2,image.rows/2,image.cols,image.rows);
+----
+
+O segundo passo instintivo seria criar os objetos da classe _Mat_ correspondentes as _roi_. Entretanto ao se executar tal processo a seguinte mensagem de erro será exibida
+
+.Erro exibido pelo console
+image::erroMat.png[]
+
+referindo-se que a área de interesse está fora dos limites da imagem.
+
+Para resolver este problema, deve-se executar os seguintes comandos
+
+.Ajuste de dimensionalidade
+[source,cpp]
+----
+	regA = regA & Rect(0,0,image.cols,image.rows);
+	regB = regB & Rect(0,0,image.cols,image.rows);
+	regC = regC & Rect(0,0,image.cols,image.rows);
+	regD = regD & Rect(0,0,image.cols,image.rows);
+----
+
+que fará com que os retângulos criados sejam ajustados para atender as dimensões da imagem a qual deseja-se extrair as _roi_.
+
+Após realizar os ajustes, procede-se a criação das regiões de interesse em definitivo, utilizando o contrutor da classe _Mat_ como mostra trecho de codigo 
+
+.Criação das Regiões de Interesse
+[source,cpp]
+----
+  Mat roiA(image,regA);
+	Mat roiB(image,regB);
+	Mat roiC(image,regC);
+	Mat roiD(image,regD);
+----
+
+O próximo passo é realizar a troca entre os quadrantes da imagem. Para isso, utiliza-se novamente objetos da classe _Rect_ para definir a localização das _roi_ na imagem de destino.
+_Obs:Este passo é opcional, considerando que o objeto pode ser passado diretamente no construtor da classe _Mat_, tratando-se apenas de uma melhor organização.
+
+.Definição das regiões de destino
+[source,cpp]
+----
+  Rect whereRecA(image.cols/2,image.rows/2,image.cols,image.rows); // <1>
+	Rect whereRecB(0,image.rows/2,image.cols/2,image.rows);
+	Rect whereRecC(image.cols/2,0,image.cols,image.rows/2);
+	Rect whereRecD(0,0,image.cols/2,image.rows/2);
+
+	whereRecA = whereRecA & Rect(0,0,image.cols,image.rows); // <2>
+	whereRecB = whereRecB & Rect(0,0,image.cols,image.rows);
+	whereRecC = whereRecC & Rect(0,0,image.cols,image.rows);
+	whereRecD = whereRecD & Rect(0,0,image.cols,image.rows);
+----
+<1> Definição da região de destino
+<2> Ajuste de dimensionalidade
+
+.Esquema de localização das regiões após a troca
+image::regioestrocadas.png[]
+Com auxílio da função _copyTo()_, copia-se o conteúdo das quatro _roi_ para a imagem de destino nas posições especificadas
+
+.Realizando a troca das diagonais
+[source,cpp]
+----
+	roiA.copyTo(newImage(whereRecA));
+	roiB.copyTo(newImage(whereRecB));
+	roiC.copyTo(newImage(whereRecC));
+	roiD.copyTo(newImage(whereRecD));
+----
+
+Com a execução do programa link::/source_codes/trocaregioes.cpp[trocaregioes.cpp] temos a seguinte saída
+
+.Imagem utilizada na execução do programa
+image::biel.png[]
+
+.Image gerada após a execução do programa
+image::saidaRegions.png[]
 
