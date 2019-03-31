@@ -144,6 +144,7 @@ _Obs:Este passo é opcional, considerando que o objeto pode ser passado diretame
 
 .Esquema de localização das regiões após a troca
 image::regioestrocadas.png[]
+
 Com auxílio da função _copyTo()_, copia-se o conteúdo das quatro _roi_ para a imagem de destino nas posições especificadas
 
 .Realizando a troca das diagonais
