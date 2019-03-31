@@ -1,15 +1,11 @@
 = Projetos - Processamento Digital de Imagens
 José Lenildo Fernandes Dantas Júnior <lenildo.ze@gmail.com>
 
-:toc: left
+
 == Projetos da Primeira Unidade
-
-:sectnums:
-
+:sectnums
 == Manipulação de Pixels
-
 :sectnums:
-
 === Negativo de uma região
 
 Este exercício tem como finalidade manipular uma determinada imagem de forma que, após receber duas coordeandas (x,y) que representam, respectivamente, o ponto inicial e final da área desejada, forme um retângulo onde será aplicado o negativo da imagem.
@@ -42,15 +38,15 @@ O resultado da execução deste programa pode ser visto abaixo
 
 [#biel.png]
 .Imagem utilizada na execução do programa
-image::../../PDI/biel.png
+image::biel.png
 
 [#Execucao-regions]
 .Pontos informados pelo usuário
-image::../../PDI/execucaoRegions.png
+image::execucaoRegions.png
 
 [#SaidaRegions.png]
 .Imagem gerada na saída
-image::../../PDI/bielnegativo.png
+image::bielnegativo.png
 
 
 
