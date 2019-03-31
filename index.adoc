@@ -306,7 +306,7 @@ Agora é trivial descobrir a quantidade de objetos sem buraco, basta realizar um
 ----
 <1> Aplicando o processo de rotulação, de forma que cada objeto terá um rótulo
 
-A execução do algoritmo :link/source_codes/labeling2.cpp[labeling2.cpp] tem como resultado de saída
+A execução do algoritmo link:/source_codes/labeling2.cpp[labeling2.cpp] tem como resultado de saída
 
 .Saída do programa labeling2.cpp
 image::/image/labeling2saida.png[]
