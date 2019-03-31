@@ -43,16 +43,13 @@ for(int i=p1x;i<p2x;i++){
   }
 ----
 
-O resultado da execução do programa link::/source_codes/regions.cpp[regions.cpp] pode ser visto abaixo
-
+O resultado da execução do programa link:/source_codes/regions.cpp[regions.cpp] pode ser visto abaixo
 
 .Imagem utilizada na execução do programa
 image::biel.png[]
 
-
 .Pontos informados pelo usuário
 image::execucaoRegions.png[]
-
 
 .Imagem gerada na saída
 image::bielnegativo.png[]
@@ -158,7 +155,7 @@ Com auxílio da função _copyTo()_, copia-se o conteúdo das quatro _roi_ para 
 	roiD.copyTo(newImage(whereRecD));
 ----
 
-Com a execução do programa link::/source_codes/trocaregioes.cpp[trocaregioes.cpp] temos a seguinte saída
+Com a execução do programa link:/source_codes/trocaregioes.cpp[trocaregioes.cpp] temos a seguinte saída
 
 .Imagem utilizada na execução do programa
 image::biel.png[]
