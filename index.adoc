@@ -162,5 +162,5 @@ Com a execução do programa link:/source_codes/trocaregioes.cpp[trocaregioes.cp
 image::/image/biel.png[]
 
 .Image gerada após a execução do programa
-image::/image/saidaRegions.png[]
+image::/image/saidaRegioes.png[]
 
