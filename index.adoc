@@ -1,6 +1,7 @@
 = Projetos - Processamento Digital de Imagens
 José Lenildo Fernandes Dantas Júnior <lenildo.ze@gmail.com>
 :toc: left
+:toc-title: Sumário
 
 == Projetos da Primeira Unidade
 
@@ -163,4 +164,151 @@ image::/image/biel.png[]
 
 .Image gerada após a execução do programa
 image::/image/saidaRegioes.png[]
+
+== Contando objetos de uma imagem
+
+O objetivo deste exercício é identificar, em uma imagem passada como entrada, a quantidade de objetos nela presentes. Para tal, desenvolveu-se um algoritmo de rotulação que utilizará o algoritmo _floodfill(ou seedfill)_. Neste código, trabalharemos com imagens binárias em escala de cinza, isto é, imagens que possuam apenas dois valores possíveis: 0 ou 255, onde o valor _"0"_ representa a ausência de cor e 255 representa a cor do objeto.
+
+A rotulação é um processo onde, para cada conglomerado de pixels,com características em comum, encontrado na imagem analisada, será atribuído um valor em comum.
+
+O processo de execução do algoritmo _floodfill_ tem como premissa um dado ponto inicial(semente) e que, a partir dele, sairá percorrendo os 4-vizinhos ou 8-zisinhos deste pixel, procurando por outros que possuam característica semelhante a da semente. A definição do modo de busca de vizinhança é definido no início do algoritmo e a imagem abaixo ilustra os métodos de busca
+
+.Métodos de busca do _floodfill_
+image::/image/vizinhos.png[]
+
+A semente é criada como um objeto da classe *_CvPoint_* 
+
+[source,cpp]
+----
+CvPoint p;
+----
+
+que possui duas dimensões, representando as coordenadas x e y da semente. Como deseja-se percorrer toda a imagem, definimos as coordenadas como (0,0) e definimos variáveis para guardar as dimenões da matriz.
+
+.Definindo a coordenada inicial da semente
+[source,cpp]
+----
+  p.x=0;
+  p.y=0;
+----
+
+[source,cpp]
+----
+  width=image.size().width;
+  height=image.size().height;
+----
+
+A imagem abaixo será utilizada para execução do programa, de forma que com ela temos alguns desafios, além de apenas contar os objetos.
+
+.Imagem a ser analizada
+image::/image/bolhas.png[]
+
+O algoritmo deve ser capaz, além de contar a quantidade de objetos, determinar quantos deles possuem buracos e quantos não os possuem. Isso nos leva a ter um cuidado com os objetos que tocam as bordas da imagem, pois não se sabe se estes possuem ou não buracos em sua totalidade.Sendo assim, o algoritmo deve excluí-las do processo antes de começar a procurar por objetos.
+
+.Remoção dos objetos nas bordas superior e inferior
+[source,cpp]
+----
+  nobjectsborder=0; // <1>
+	for (int i=0;i<height;i=i+height-1){ // <2>
+		for(int j=0;j<width;j++){ //<3>
+			if (image.at<uchar>(i,j) == 255){ // <4>
+				nobjectsborder++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,0); // <5>
+			}
+		}	
+	}
+----
+<1> Contador de objetos presentes nas bordas
+<2> Laço de duas iterações para varrer a borda superior e inferior
+<3> Laço para varrer horizontalmente as colunas da matriz _image_
+<4> Verificação do valor do pixel
+<5> Chamada da função _floodfill_ 
+
+.Remoção dos objetos nas bordas laterais
+[source,cpp]
+----
+	for (int i=0;i<height;i++){
+		for(int j=0;j<width;j=j + width -1){
+			if (image.at<uchar>(i,j) == 255){
+				nobjectsborder++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,0);
+			}
+		}	
+	}
+----
+
+A função _floodfill_ recebe como parâmetros,respectivamente, a matriz de pixels da imagem de entrada(_image_), a semente(_p_) e o valor a ser atribuído aos píxels com características comuns ao procurado. No caso deste exemplo, atribui-se o valor _"0"_ para que sejam preenchidos com a cor do fundo da imagem.
+
+O resultado desta funcionalidade pode ser observado com a execução do arquivo link:/source_codes/removeObjBorda.cpp
+
+.Imagem de entrada após a remoção dos objetos das bordas
+image::/image/labeling.png[]
+
+Agora podemos voltar a lidar com o problema principal de identificar a quantidade de objetos com e sem buracos. Mas como descobrir se um objeto tem ou não buraco se o algoritmo _floodfill_ procura por pixels de características semelhantes e um buraco é a ausência da cor enquanto o objeto é o valor máximo que o pixel pode assumir?
+Para que isso seja possível, deve-se alterar a cor do fundo da imagem, utilizando o algoritmo _floodfill_,pois assim ele irá "pintar" apenas a região externa aos objetos e com isso, apenas o interior de objetos com bolhas possuirão valor "0" em seus pixels. Essa tarefa pode ser executada com o trecho de código abaixo.
+
+[source,cpp]
+----
+	p.x=0;
+	p.y=0;
+	floodFill(image,p,175); // <1>
+---- 
+<1> Atribuindo o valor "175" como nova cor de fundo
+
+O resultado pode ser observado com a execução do arquivo link:/source_codes/trocafundo.cpp[trocafundo.cpp]
+
+.Imagem de entrada após alterar o fundo
+image::/image/trocafundo.png[]
+
+Com isso, basta executar o algoritmo novamente buscando por pixels com valor "0" e contá-los para termos ciência da quantidade dos que possuem buracos.
+
+.Buscando pelos buracos dos objetos
+[source,cpp]
+----
+nobjectsholes=0;
+  for(int i=0; i<height; i++){
+    for(int j=0; j<width; j++){
+      if(image.at<uchar>(i,j) == 0){
+		// achou um objeto
+				nobjectsholes++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,100);
+	  	}
+		}
+  }	
+----
+
+Agora é trivial descobrir a quantidade de objetos sem buraco, basta realizar uma busca por pixels com valor "255", isso contará inclusive os que possuem buracos, e em seguida fazer uma subtração entre os valores dos contadores.
+
+.Contando todos os objetos
+[source,cpp]
+----
+  nobjects=0;
+  for(int i=0; i<height; i++){
+    for(int j=0; j<width; j++){
+      if(image.at<uchar>(i,j) == 255){
+		// achou um objeto
+				nobjects++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,nobjects); // <1>
+	  	}
+		}
+  }
+
+	std::cout<<"com buracos="<<nobjectsholes<<"\nSem buracos="<<(nobjects - nobjectsholes)<<"\n";
+  imshow("image", image);
+----
+<1> Aplicando o processo de rotulação, de forma que cada objeto terá um rótulo
+
+A execução do algoritmo :link/source_codes/labeling2.cpp[labeling2.cpp] tem como resultado de saída
+
+.Saída do programa labeling2.cpp
+image::/image/labeling2saida.png
+
 

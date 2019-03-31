@@ -443,7 +443,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author" class="author">José Lenildo Fernandes Dantas Júnior &lt;lenildo.ze@gmail.com&gt;</span><br>
 </div>
 <div id="toc" class="toc2">
-<div id="toctitle">Table of Contents</div>
+<div id="toctitle">Sumário</div>
 <ul class="sectlevel1">
 <li><a href="#_projetos_da_primeira_unidade">Projetos da Primeira Unidade</a></li>
 <li><a href="#_manipulação_de_pixels">1. Manipulação de Pixels</a>
@@ -452,6 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_troca_de_regiões">1.2. Troca de Regiões</a></li>
 </ul>
 </li>
+<li><a href="#_contando_objetos_de_uma_imagem">2. Contando objetos de uma imagem</a></li>
 </ul>
 </div>
 </div>
@@ -683,10 +684,212 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_contando_objetos_de_uma_imagem">2. Contando objetos de uma imagem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>O objetivo deste exercício é identificar, em uma imagem passada como entrada, a quantidade de objetos nela presentes. Para tal, desenvolveu-se um algoritmo de rotulação que utilizará o algoritmo <em>floodfill(ou seedfill)</em>. Neste código, trabalharemos com imagens binárias em escala de cinza, isto é, imagens que possuam apenas dois valores possíveis: 0 ou 255, onde o valor <em>"0"</em> representa a ausência de cor e 255 representa a cor do objeto.</p>
+</div>
+<div class="paragraph">
+<p>A rotulação é um processo onde, para cada conglomerado de pixels,com características em comum, encontrado na imagem analisada, será atribuído um valor em comum.</p>
+</div>
+<div class="paragraph">
+<p>O processo de execução do algoritmo <em>floodfill</em> tem como premissa um dado ponto inicial(semente) e que, a partir dele, sairá percorrendo os 4-vizinhos ou 8-zisinhos deste pixel, procurando por outros que possuam característica semelhante a da semente. A definição do modo de busca de vizinhança é definido no início do algoritmo e a imagem abaixo ilustra os métodos de busca</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/vizinhos.png" alt="vizinhos">
+</div>
+<div class="title">Figure 10. Métodos de busca do <em>floodfill</em></div>
+</div>
+<div class="paragraph">
+<p>A semente é criada como um objeto da classe <strong><em>CvPoint</em></strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">CvPoint p;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>que possui duas dimensões, representando as coordenadas x e y da semente. Como deseja-se percorrer toda a imagem, definimos as coordenadas como (0,0) e definimos variáveis para guardar as dimenões da matriz.</p>
+</div>
+<div class="listingblock">
+<div class="title">Definindo a coordenada inicial da semente</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">  p.x=0;
+  p.y=0;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">  width=image.size().width;
+  height=image.size().height;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A imagem abaixo será utilizada para execução do programa, de forma que com ela temos alguns desafios, além de apenas contar os objetos.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/bolhas.png" alt="bolhas">
+</div>
+<div class="title">Figure 11. Imagem a ser analizada</div>
+</div>
+<div class="paragraph">
+<p>O algoritmo deve ser capaz, além de contar a quantidade de objetos, determinar quantos deles possuem buracos e quantos não os possuem. Isso nos leva a ter um cuidado com os objetos que tocam as bordas da imagem, pois não se sabe se estes possuem ou não buracos em sua totalidade.Sendo assim, o algoritmo deve excluí-las do processo antes de começar a procurar por objetos.</p>
+</div>
+<div class="listingblock">
+<div class="title">Remoção dos objetos nas bordas superior e inferior</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">  nobjectsborder=0; // <b class="conum">(1)</b>
+	for (int i=0;i&lt;height;i=i+height-1){ // <b class="conum">(2)</b>
+		for(int j=0;j&lt;width;j++){ //<b class="conum">(3)</b>
+			if (image.at&lt;uchar&gt;(i,j) == 255){ // <b class="conum">(4)</b>
+				nobjectsborder++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,0); // <b class="conum">(5)</b>
+			}
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Contador de objetos presentes nas bordas</p>
+</li>
+<li>
+<p>Laço de duas iterações para varrer a borda superior e inferior</p>
+</li>
+<li>
+<p>Laço para varrer horizontalmente as colunas da matriz <em>image</em></p>
+</li>
+<li>
+<p>Verificação do valor do pixel</p>
+</li>
+<li>
+<p>Chamada da função <em>floodfill</em></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">Remoção dos objetos nas bordas laterais</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">	for (int i=0;i&lt;height;i++){
+		for(int j=0;j&lt;width;j=j + width -1){
+			if (image.at&lt;uchar&gt;(i,j) == 255){
+				nobjectsborder++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,0);
+			}
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A função <em>floodfill</em> recebe como parâmetros,respectivamente, a matriz de pixels da imagem de entrada(<em>image</em>), a semente(<em>p</em>) e o valor a ser atribuído aos píxels com características comuns ao procurado. No caso deste exemplo, atribui-se o valor <em>"0"</em> para que sejam preenchidos com a cor do fundo da imagem.</p>
+</div>
+<div class="paragraph">
+<p>O resultado desta funcionalidade pode ser observado com a execução do arquivo link:/source_codes/removeObjBorda.cpp</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/labeling.png" alt="labeling">
+</div>
+<div class="title">Figure 12. Imagem de entrada após a remoção dos objetos das bordas</div>
+</div>
+<div class="paragraph">
+<p>Agora podemos voltar a lidar com o problema principal de identificar a quantidade de objetos com e sem buracos. Mas como descobrir se um objeto tem ou não buraco se o algoritmo <em>floodfill</em> procura por pixels de características semelhantes e um buraco é a ausência da cor enquanto o objeto é o valor máximo que o pixel pode assumir?
+Para que isso seja possível, deve-se alterar a cor do fundo da imagem, utilizando o algoritmo <em>floodfill</em>,pois assim ele irá "pintar" apenas a região externa aos objetos e com isso, apenas o interior de objetos com bolhas possuirão valor "0" em seus pixels. Essa tarefa pode ser executada com o trecho de código abaixo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">	p.x=0;
+	p.y=0;
+	floodFill(image,p,175); // <b class="conum">(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Atribuindo o valor "175" como nova cor de fundo</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>O resultado pode ser observado com a execução do arquivo <a href="/source_codes/trocafundo.cpp">trocafundo.cpp</a></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/trocafundo.png" alt="trocafundo">
+</div>
+<div class="title">Figure 13. Imagem de entrada após alterar o fundo</div>
+</div>
+<div class="paragraph">
+<p>Com isso, basta executar o algoritmo novamente buscando por pixels com valor "0" e contá-los para termos ciência da quantidade dos que possuem buracos.</p>
+</div>
+<div class="listingblock">
+<div class="title">Buscando pelos buracos dos objetos</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">nobjectsholes=0;
+  for(int i=0; i&lt;height; i++){
+    for(int j=0; j&lt;width; j++){
+      if(image.at&lt;uchar&gt;(i,j) == 0){
+		// achou um objeto
+				nobjectsholes++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,100);
+	  	}
+		}
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Agora é trivial descobrir a quantidade de objetos sem buraco, basta realizar uma busca por pixels com valor "255", isso contará inclusive os que possuem buracos, e em seguida fazer uma subtração entre os valores dos contadores.</p>
+</div>
+<div class="listingblock">
+<div class="title">Contando todos os objetos</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">  nobjects=0;
+  for(int i=0; i&lt;height; i++){
+    for(int j=0; j&lt;width; j++){
+      if(image.at&lt;uchar&gt;(i,j) == 255){
+		// achou um objeto
+				nobjects++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,nobjects); // <b class="conum">(1)</b>
+	  	}
+		}
+  }
+
+	std::cout&lt;&lt;"com buracos="&lt;&lt;nobjectsholes&lt;&lt;"\nSem buracos="&lt;&lt;(nobjects - nobjectsholes)&lt;&lt;"\n";
+  imshow("image", image);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Aplicando o processo de rotulação, de forma que cada objeto terá um rótulo</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>A execução do algoritmo :link/source_codes/labeling2.cpp[labeling2.cpp] tem como resultado de saída</p>
+</div>
+<div class="paragraph">
+<div class="title">Saída do programa labeling2.cpp</div>
+<p>image::/image/labeling2saida.png</p>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-31 16:23:09 -0300
+Last updated 2019-03-31 20:05:07 -0300
 </div>
 </div>
 </body>
