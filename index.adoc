@@ -4,7 +4,7 @@ José Lenildo Fernandes Dantas Júnior <lenildo.ze@gmail.com>
 
 == Projetos da Primeira Unidade
 
-:sectnums
+:sectnums:
 
 == Manipulação de Pixels
 
