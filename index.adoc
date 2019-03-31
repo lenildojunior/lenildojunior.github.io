@@ -2,8 +2,9 @@
 José Lenildo Fernandes Dantas Júnior <lenildo.ze@gmail.com>
 
 :toc: left
-:sectnums:
 == Projetos da Primeira Unidade
+
+:sectnums:
 
 == Manipulação de Pixels
 
