@@ -455,14 +455,67 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_negativo_de_uma_região">1.1. Negativo de uma região</h3>
-
+<div class="paragraph">
+<p>Este exercício tem como finalidade manipular uma determinada imagem de forma que, após receber duas coordeandas (x,y) que representam, respectivamente, o ponto inicial e final da área desejada, forme um retângulo onde será aplicado o negativo da imagem.</p>
+</div>
+<div class="paragraph">
+<p>O conceito e negativo de uma imagem está atrelado ao fato de acessar os pixels da imagem e subtrair dele o valor máximo que ele pode assunmir. No caso deste exercício, estaremos utilizando uma imagem em tons de cinza com armazenamento de 1 byte, ou seja, cada pixel pode assumir valores entre 0 e 255. Com isso o negativo da imagem pode ser definido como</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">image.at&lt;uchar&gt;(i,j)=255-image.at&lt;uchar&gt;(i,j);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>onde:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><em>image</em></strong> : Refere-se a imagem manipulada</p>
+</li>
+<li>
+<p><strong><em>.at&lt;uchar&gt;</em></strong> : Método para acesso aos pixels de um <em>unsigned char</em> (&lt;uchar&gt;) com 1 <em>byte</em> de tamanho</p>
+</li>
+<li>
+<p><strong><em>(i,j)</em></strong> : Representam as coordenadas (x,y) do pixel</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Para aplicar este efeito em toda a imagem, basta acrescentá-la a um laço <em>for()</em> como mostra o trecho do código</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">for(int i=p1x;i&lt;p2x;i++){
+    for(int j=p1y;j&lt;p2y;j++){
+      image.at&lt;uchar&gt;(i,j)=255-image.at&lt;uchar&gt;(i,j);
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O resultado da execução deste programa pode ser visto abaixo</p>
+</div>
+<div id="biel" class="paragraph png">
+<div class="title">Imagem utilizada na execução do programa</div>
+<p>image::../../PDI/biel.png</p>
+</div>
+<div id="Execucao-regions" class="paragraph">
+<div class="title">Pontos informados pelo usuário</div>
+<p>image::../../PDI/execucaoRegions.png</p>
+</div>
+<div id="SaidaRegions" class="paragraph png">
+<div class="title">Imagem gerada na saída</div>
+<p>image::../../PDI/bielnegativo.png</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-30 21:05:28 -0300
+Last updated 2019-03-30 22:21:53 -0300
 </div>
 </div>
 </body>
