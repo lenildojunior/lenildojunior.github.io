@@ -1,7 +1,6 @@
 = Projetos - Processamento Digital de Imagens
 José Lenildo Fernandes Dantas Júnior <lenildo.ze@gmail.com>
 :toc: left
-:imagesdir: /image/
 
 == Projetos da Primeira Unidade
 
@@ -17,7 +16,7 @@ Este exercício tem como finalidade manipular uma determinada imagem de forma qu
 
 
 .Área criada com os pontos
-image::Retangulo.png[]
+image::/image/Retangulo.png[]
 
 
 O conceito e negativo de uma imagem está atrelado ao fato de acessar os pixels da imagem e subtrair dele o valor máximo que ele pode assunmir. No caso deste exercício, estaremos utilizando uma imagem em tons de cinza com armazenamento de 1 byte, ou seja, cada pixel pode assumir valores entre 0 e 255. Com isso o negativo da imagem pode ser definido como
@@ -47,13 +46,13 @@ for(int i=p1x;i<p2x;i++){
 O resultado da execução do programa link:/source_codes/regions.cpp[regions.cpp] pode ser visto abaixo
 
 .Imagem utilizada na execução do programa
-image::biel.png[]
+image::/image/biel.png[]
 
 .Pontos informados pelo usuário
-image::execucaoRegions.png[]
+image::/image/execucaoRegions.png[]
 
 .Imagem gerada na saída
-image::bielnegativo.png[]
+image::/image/bielnegativo.png[]
 
 
 === Troca de Regiões
@@ -61,7 +60,7 @@ image::bielnegativo.png[]
 Este exercício tem como finalidade colocar em prática o conceito inicial de *_regiões_de_interesse(roi)_*, tornando possível criar um programa capaz de realizar a troca dos quadrantes de uma imagem. Neste exemplo, serão criadas 4 regiões de interesse de forma que, ao final do programa possa ser realizada a troca de cada região pela sua diagonal.
 
 .Divisão das regiões da imagem
-image::regioesnomeadas.png[]
+image::/image/regioesnomeadas.png[]
 
 Inicialmente, realiza-se a leitura de uma imagem a ser processada pelo programa em duas variáveis do tipo *_Mat_* distintas, de forma que na primeira serão definidas as regiões de interesse que serão copiadas para a segunda.
 
@@ -96,7 +95,7 @@ O primeiro passo é criar quatro objetos da classe _Rect_, referentes as quatro 
 O segundo passo instintivo seria criar os objetos da classe _Mat_ correspondentes as _roi_. Entretanto ao se executar tal processo a seguinte mensagem de erro será exibida
 
 .Erro exibido pelo console
-image::erroMat.png[]
+image::/image/erroMat.png[]
 
 referindo-se que a área de interesse está fora dos limites da imagem.
 
@@ -144,7 +143,7 @@ _Obs:Este passo é opcional, considerando que o objeto pode ser passado diretame
 <2> Ajuste de dimensionalidade
 
 .Esquema de localização das regiões após a troca
-image::regioestrocadas.png[]
+image::/image/regioestrocadas.png[]
 
 Com auxílio da função _copyTo()_, copia-se o conteúdo das quatro _roi_ para a imagem de destino nas posições especificadas
 
@@ -160,8 +159,8 @@ Com auxílio da função _copyTo()_, copia-se o conteúdo das quatro _roi_ para 
 Com a execução do programa link:/source_codes/trocaregioes.cpp[trocaregioes.cpp] temos a seguinte saída
 
 .Imagem utilizada na execução do programa
-image::biel.png[]
+image::/image/biel.png[]
 
 .Image gerada após a execução do programa
-image::saidaRegions.png[]
+image::/image/saidaRegions.png[]
 
