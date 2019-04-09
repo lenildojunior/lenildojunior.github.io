@@ -456,6 +456,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_manipulação_de_histogramas">3. Manipulação de Histogramas</a>
 <ul class="sectlevel2">
 <li><a href="#_equalização">3.1. Equalização</a></li>
+<li><a href="#_detecção_de_movimentos">3.2. Detecção de movimentos</a></li>
 </ul>
 </li>
 </ul>
@@ -1046,12 +1047,49 @@ Por exemplo, caso o histograma de uma imagem seja como a a imagem abaixo</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_detecção_de_movimentos">3.2. Detecção de movimentos</h3>
+<div class="paragraph">
+<p>Para desenvolver o algoritmo que permita perceber se houve algum tipo de movimento, será usado como base o código da seção anterior.
+A estratégia utilizada para detectar movimentos será realizar a comparação entre os histogramas de cada frame capturado, comparando o anterior ao seu seguinte até encontrar uma diferença. Esse monitoramento será realizado de forma contínua e o programa mostrará na tela o momento em que o movimento foi detectado, onde serão exibidas duas janelas representando cada um dos frames.</p>
+</div>
+<div class="paragraph">
+<p>Antes de realizar o processo em si é necessário resolver um problema comum em algumas webcams integradas em notebooks que, ao serem iniciadas com o comando <em>cap.open(0)</em> , inciam com uma imagem bem escura e vaõ ajustando o brilho com o passar do tempo. Esse ajuste é necessário, pois se realizarmos a comparaçã ode histogramas a partir do momento em que a câmera é aberta, o próximo frame, com mais brilho, já terá uma diferença em seu histograma.</p>
+</div>
+<div class="paragraph">
+<p>Para evitar este problema adotou-se uma estratégia simples: criar um contador que, após o dispositivo de vídeo ser aberto, realizar 40 execuçoes do algoritmo, ou seja, realizar o cálculo do histograma dos 40 primeiros frames sem realizar qualquer tipo de comparação e, a partir do frame 41, onde a câmera já está com seu brilho devidamente ajustado, habilitar a região do código que executa a comparaçã oentre frames.</p>
+</div>
+<div class="listingblock">
+<div class="title">Região do código responsável pela comparação de histogramas</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">cont++;
+		if(cont&gt;36)cout&lt;&lt;"MOVE!!!!\n";
+		if(cont&gt;=40){
+			if(histR_old.empty()==true){
+				histR_old = histR.clone();
+				image_old=image.clone();
+			}
+			else{
+				double histCorrelation = compareHist( histR, histR_old, CV_COMP_CHISQR);
+				cout&lt;&lt;histCorrelation&lt;&lt;"\n";
+				if(histCorrelation &gt; 75){
+
+					alarm=1;
+					hconcat(image_old,image,image);
+					cout&lt;&lt;"ALERT, DETECTED!!!\n";
+					imshow("image", image);
+      		if(waitKey(10000) &gt;= 0) break;
+				}
+			}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-09 10:56:26 -0300
+Last updated 2019-04-09 12:13:41 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">

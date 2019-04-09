@@ -432,4 +432,38 @@ image::/image/saidaequalize.png[]
 image::/image/saidaequalizeluz1.png[]
 
 
+=== Detecção de movimentos
+
+Para desenvolver o algoritmo que permita perceber se houve algum tipo de movimento, será usado como base o código da seção anterior.
+A estratégia utilizada para detectar movimentos será realizar a comparação entre os histogramas de cada frame capturado, comparando o anterior ao seu seguinte até encontrar uma diferença. Esse monitoramento será realizado de forma contínua e o programa mostrará na tela o momento em que o movimento foi detectado, onde serão exibidas duas janelas representando cada um dos frames.
+
+Antes de realizar o processo em si é necessário resolver um problema comum em algumas webcams integradas em notebooks que, ao serem iniciadas com o comando _cap.open(0)_ , inciam com uma imagem bem escura e vaõ ajustando o brilho com o passar do tempo. Esse ajuste é necessário, pois se realizarmos a comparaçã ode histogramas a partir do momento em que a câmera é aberta, o próximo frame, com mais brilho, já terá uma diferença em seu histograma.
+
+Para evitar este problema adotou-se uma estratégia simples: criar um contador que, após o dispositivo de vídeo ser aberto, realizar 40 execuçoes do algoritmo, ou seja, realizar o cálculo do histograma dos 40 primeiros frames sem realizar qualquer tipo de comparação e, a partir do frame 41, onde a câmera já está com seu brilho devidamente ajustado, habilitar a região do código que executa a comparaçã oentre frames.
+
+.Região do código responsável pela comparação de histogramas
+[source,cpp]
+----
+cont++;
+		if(cont>36)cout<<"MOVE!!!!\n";
+		if(cont>=40){
+			if(histR_old.empty()==true){
+				histR_old = histR.clone();
+				image_old=image.clone();
+			}
+			else{
+				double histCorrelation = compareHist( histR, histR_old, CV_COMP_CHISQR);
+				cout<<histCorrelation<<"\n";
+				if(histCorrelation > 75){
+					
+					alarm=1;	
+					hconcat(image_old,image,image);
+					cout<<"ALERT, DETECTED!!!\n";
+					imshow("image", image);
+      		if(waitKey(10000) >= 0) break;
+				}
+			}
+----
+
+
 
