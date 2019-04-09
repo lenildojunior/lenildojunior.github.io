@@ -404,7 +404,7 @@ calcHist(&planes[0], 1, 0, Mat(), histR, 1,
     histImgB.setTo(Scalar(0));
 ----
 
-A imagem abixo representa a saída do programa link:/source_codes/histogram.cpp[histogram.cpp]
+A imagem abaixo representa a saída do programa link:/source_codes/histogram.cpp[histogram.cpp]
 
 .Saída do programa _histogram.cpp_
 image::/image/exemplohist.png[]
