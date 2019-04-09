@@ -940,13 +940,109 @@ Por exemplo, caso o histograma de uma imagem seja como a a imagem abaixo</p>
 </div>
 <div class="title">Figure 17. Histograma da imagem após a equalização</div>
 </div>
+<div class="sect3">
+<h4 id="_programa_equalize_cpp">3.1.1. Programa <em>equalize.cpp</em></h4>
+<div class="paragraph">
+<p>No OpenCV dispomos da função <em>calcHist()</em> para a obtenção do histograma de uma dada imagem.</p>
+</div>
+<div class="listingblock">
+<div class="title">Função <em>calcHist()</em></div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">    void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, OutputArray hist, int dims, const int* histSize, const float** ranges, bool uniform=true, bool accumulate=false )</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Esta função tem como parâmetros, respectivamente:
+* Uma referência para a imagem que se deseja processar;
+* A quantidade de imagens a serem calculadas;
+* Um ponteiro para o array de canais da imagem (0 quando for apenas um canal);
+* Uma máscara da região de onde deseja-se calcular o histograma (para a imagem inteira, indica-se uma matriz vazia);
+* A variável que irá armazenar o histograma;
+* O tamanho da dimensão do histograma;
+* O endereço da quantidade de barras do histograma;
+* Variáveis que informam o comportamento do histograma (uniformidade, cumulativo)</p>
+</div>
+<div class="paragraph">
+<p>Ao trabalharmos com imagens coloridas, ou seja, que possuem matrizes representando cada uma das componentes RGB é comum realizar o cálculo do histograma de cada componente de forma separada por ser mais simples, uma vez que, para processar toda a imagem de uma vez seria necessário trabalhar com uma matriz de 256x256x256 elementos. Para realizar a separaçao de cada uma dos componentes utilizamos a função <em>split()</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">split (image, planes);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deve-se criar ainda uma variável para cada histograma</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp"> Mat histImgR(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgG(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgB(histh, histw, CV_8UC3, Scalar(0,0,0));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Em seguida prosseguir com o cálculo de cada histograma e normaliza-lo de acordo com o tamanho da imagem onde ele será alocado</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">calcHist(&amp;planes[0], 1, 0, Mat(), histR, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+    calcHist(&amp;planes[1], 1, 0, Mat(), histG, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+    calcHist(&amp;planes[2], 1, 0, Mat(), histB, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+
+    normalize(histR, histR, 0, histImgR.rows, NORM_MINMAX, -1, Mat());
+    normalize(histG, histG, 0, histImgG.rows, NORM_MINMAX, -1, Mat());
+    normalize(histB, histB, 0, histImgB.rows, NORM_MINMAX, -1, Mat());
+
+    histImgR.setTo(Scalar(0));
+    histImgG.setTo(Scalar(0));
+    histImgB.setTo(Scalar(0));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No algoritmo <a href="/source_codes/equalize.cpp">equalize.cpp</a> admite-se que a imagem seja dada em tons de cinza, para isso, após a leitura ler a imagem, mesmo que esta seja colorida utilizamos da função <em>cvtColor()</em> como mostra o trecho abaixo, para converter de RGB para <em>Grayscale</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">cvtColor(image,image, CV_BGR2GRAY);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O processo de equalização é realizado com o auxílio da função <em>equalizeHist()</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">equalizeHist( image,image);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A saída do programa <a href="/source_codes/equalize.cpp">equalize.cpp</a> pode ser vista nas imagens abaixo.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/saidaequalize.png" alt="saidaequalize">
+</div>
+<div class="title">Figure 18. Saída do programa <em>equalize.cpp</em></div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/saidaeuqalizeluz1.png" alt="saidaeuqalizeluz1">
+</div>
+<div class="title">Figure 19. Saída do programa <em>equalize.cpp</em> com maior iluminação</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-09 09:53:54 -0300
+Last updated 2019-04-09 10:40:15 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">

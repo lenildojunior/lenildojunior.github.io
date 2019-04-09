@@ -345,4 +345,86 @@ onde, agora, temos os novos valores equalizados dos pixels da imagem original qu
 .Histograma da imagem após a equalização
 image::/image/imghistequalized.png[]
 
+==== Programa _equalize.cpp_
+
+No OpenCV dispomos da função _calcHist()_ para a obtenção do histograma de uma dada imagem.
+
+.Função _calcHist()_
+[source,cpp]
+----
+    void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, OutputArray hist, int dims, const int* histSize, const float** ranges, bool uniform=true, bool accumulate=false )
+----
+
+Esta função tem como parâmetros, respectivamente:
+* Uma referência para a imagem que se deseja processar;
+* A quantidade de imagens a serem calculadas;
+* Um ponteiro para o array de canais da imagem (0 quando for apenas um canal);
+* Uma máscara da região de onde deseja-se calcular o histograma (para a imagem inteira, indica-se uma matriz vazia);
+* A variável que irá armazenar o histograma;
+* O tamanho da dimensão do histograma;
+* O endereço da quantidade de barras do histograma;
+* Variáveis que informam o comportamento do histograma (uniformidade, cumulativo)
+
+Ao trabalharmos com imagens coloridas, ou seja, que possuem matrizes representando cada uma das componentes RGB é comum realizar o cálculo do histograma de cada componente de forma separada por ser mais simples, uma vez que, para processar toda a imagem de uma vez seria necessário trabalhar com uma matriz de 256x256x256 elementos. Para realizar a separaçao de cada uma dos componentes utilizamos a função _split()_.
+
+[source,cpp]
+----
+split (image, planes);
+----
+
+Deve-se criar ainda uma variável para cada histograma
+
+[source,cpp]
+----
+ Mat histImgR(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgG(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgB(histh, histw, CV_8UC3, Scalar(0,0,0));
+----
+
+Em seguida prosseguir com o cálculo de cada histograma e normaliza-lo de acordo com o tamanho da imagem onde ele será alocado
+
+[source,cpp]
+----
+calcHist(&planes[0], 1, 0, Mat(), histR, 1,
+             &nbins, &histrange,
+             uniform, acummulate);
+    calcHist(&planes[1], 1, 0, Mat(), histG, 1,
+             &nbins, &histrange,
+             uniform, acummulate);
+    calcHist(&planes[2], 1, 0, Mat(), histB, 1,
+             &nbins, &histrange,
+             uniform, acummulate);
+
+    normalize(histR, histR, 0, histImgR.rows, NORM_MINMAX, -1, Mat());
+    normalize(histG, histG, 0, histImgG.rows, NORM_MINMAX, -1, Mat());
+    normalize(histB, histB, 0, histImgB.rows, NORM_MINMAX, -1, Mat());
+
+    histImgR.setTo(Scalar(0));
+    histImgG.setTo(Scalar(0));
+    histImgB.setTo(Scalar(0));
+----
+
+No algoritmo link:/source_codes/equalize.cpp[equalize.cpp] admite-se que a imagem seja dada em tons de cinza, para isso, após a leitura ler a imagem, mesmo que esta seja colorida utilizamos da função _cvtColor()_ como mostra o trecho abaixo, para converter de RGB para _Grayscale_
+
+[source,cpp]
+----
+cvtColor(image,image, CV_BGR2GRAY);
+----
+
+O processo de equalização é realizado com o auxílio da função _equalizeHist()_
+
+[source,cpp]
+----
+equalizeHist( image,image);
+----
+
+A saída do programa link:/source_codes/equalize.cpp[equalize.cpp] pode ser vista nas imagens abaixo.
+
+.Saída do programa _equalize.cpp_
+image::/image/saidaequalize.png[]
+
+.Saída do programa _equalize.cpp_ com maior iluminação
+image::/image/saidaeuqalizeluz1.png[]
+
+
 
