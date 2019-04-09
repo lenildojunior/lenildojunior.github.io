@@ -334,9 +334,9 @@ Temos que o valor 45 aparece 10 vezes, 70 aparece 15 vezes, 80 aparece 8 vezes e
 
 [stem]
 ++++
-\frac{10}{38}255\\ = 67  
-\frac{25}{38}255\\ = 167 
-\frac{33}{38}255\\ = 221
-\frac{38}{38}255\\ = 255
+\frac{10}{38}255 = 67\\   
+\frac{25}{38}255 = 167 \\ 
+\frac{33}{38}255 = 221\\ 
+\frac{38}{38}255 = 255\\ 
 ++++
 
