@@ -424,7 +424,7 @@ A saída do programa link:/source_codes/equalize.cpp[equalize.cpp] pode ser vist
 image::/image/saidaequalize.png[]
 
 .Saída do programa _equalize.cpp_ com maior iluminação
-image::/image/saidaeuqalizeluz1.png[]
+image::/image/saidaequalizeluz1.png[]
 
 
 
