@@ -407,7 +407,7 @@ calcHist(&planes[0], 1, 0, Mat(), histR, 1,
 A imagem abaixo representa a saída do programa link:/source_codes/histogram.cpp[histogram.cpp]
 
 .Saída do programa _histogram.cpp_
-image::/image/exemplohist.png[]
+image::/image/exemphist.png[]
 
 No algoritmo link:/source_codes/equalize.cpp[equalize.cpp] admite-se que a imagem seja dada em tons de cinza, para isso, após a leitura ler a imagem, mesmo que esta seja colorida utilizamos da função _cvtColor()_ como mostra o trecho abaixo, para converter de RGB para _Grayscale_
 
