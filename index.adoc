@@ -474,3 +474,35 @@ Um exemplo do funcionamento do programa link:/source_codes/motiondetector.cpp[mo
 
 .Execução do programa _motiondetector.cpp_
 video::_sl0xxIOKLU[youtube]
+
+== Filtro espacial
+
+A filtragem espacial no contexto de Processamento Digital de Sinais trata-se do processo de convolução digital da matriz que representa a imagem e de uma máscara que representa o efeito do filtro desejado.
+
+=== Filtro Laplaciano do Gaussiano
+
+O programa desenvolvido utiliza como base o código link:https://agostinhobritojr.github.io/tutorial/pdi/exemplos/filtroespacial.cpp[filtroespacial.cpp], disponibilizado pelo Prof. Agostinho em sua página do Github.
+
+O programa base utiliza da convolução digital para realizar alguns processos de filtragem: Filtro da média, Gaussiana, Horizontal, Absoluto, Vertical e Laplaciano.
+
+.Matrizes utilizadas para os filtros
+[source,cpp]
+----
+float media[] = {1,1,1,
+				   1,1,1,
+				   1,1,1};
+float gauss[] = {1,2,1,
+				   2,4,2,
+				   1,2,1};
+float horizontal[]={-1,0,1,
+					  -2,0,2,
+					  -1,0,1};
+float vertical[]={-1,-2,-1,
+					0,0,0,
+					1,2,1};
+float laplacian[]={0,-1,0,
+					 -1,4,-1,
+					 0,-1,0};
+----
+
+

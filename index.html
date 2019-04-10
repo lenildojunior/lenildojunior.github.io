@@ -459,6 +459,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_detecção_de_movimentos">3.2. Detecção de movimentos</a></li>
 </ul>
 </li>
+<li><a href="#_filtro_espacial">4. Filtro espacial</a>
+<ul class="sectlevel2">
+<li><a href="#_filtro_laplaciano_do_gaussiano">4.1. Filtro Laplaciano do Gaussiano</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1123,10 +1128,47 @@ if(cont&gt;=40){
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_filtro_espacial">4. Filtro espacial</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A filtragem espacial no contexto de Processamento Digital de Sinais trata-se do processo de convolução digital da matriz que representa a imagem e de uma máscara que representa o efeito do filtro desejado.</p>
+</div>
+<div class="sect2">
+<h3 id="_filtro_laplaciano_do_gaussiano">4.1. Filtro Laplaciano do Gaussiano</h3>
+<div class="paragraph">
+<p>O programa desenvolvido utiliza como base o código <a href="https://agostinhobritojr.github.io/tutorial/pdi/exemplos/filtroespacial.cpp">filtroespacial.cpp</a>, disponibilizado pelo Prof. Agostinho em sua página do Github.</p>
+</div>
+<div class="paragraph">
+<p>O programa base utiliza da convolução digital para realizar alguns processos de filtragem: Filtro da média, Gaussiana, Horizontal, Absoluto, Vertical e Laplaciano.</p>
+</div>
+<div class="listingblock">
+<div class="title">Matrizes utilizadas para os filtros</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">float media[] = {1,1,1,
+				   1,1,1,
+				   1,1,1};
+float gauss[] = {1,2,1,
+				   2,4,2,
+				   1,2,1};
+float horizontal[]={-1,0,1,
+					  -2,0,2,
+					  -1,0,1};
+float vertical[]={-1,-2,-1,
+					0,0,0,
+					1,2,1};
+float laplacian[]={0,-1,0,
+					 -1,4,-1,
+					 0,-1,0};</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-10 00:04:58 -0300
+Last updated 2019-04-10 08:33:19 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">
