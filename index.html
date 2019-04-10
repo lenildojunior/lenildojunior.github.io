@@ -953,15 +953,35 @@ Por exemplo, caso o histograma de uma imagem seja como a a imagem abaixo</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Esta função tem como parâmetros, respectivamente:
-* Uma referência para a imagem que se deseja processar;
-* A quantidade de imagens a serem calculadas;
-* Um ponteiro para o array de canais da imagem (0 quando for apenas um canal);
-* Uma máscara da região de onde deseja-se calcular o histograma (para a imagem inteira, indica-se uma matriz vazia);
-* A variável que irá armazenar o histograma;
-* O tamanho da dimensão do histograma;
-* O endereço da quantidade de barras do histograma;
-* Variáveis que informam o comportamento do histograma (uniformidade, cumulativo)</p>
+<p>Esta função tem como parâmetros, respectivamente:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Uma referência para a imagem que se deseja processar;</p>
+</li>
+<li>
+<p>A quantidade de imagens a serem calculadas;</p>
+</li>
+<li>
+<p>Um ponteiro para o array de canais da imagem (0 quando for apenas um canal);</p>
+</li>
+<li>
+<p>Uma máscara da região de onde deseja-se calcular o histograma (para a imagem inteira, indica-se uma matriz vazia);</p>
+</li>
+<li>
+<p>A variável que irá armazenar o histograma;</p>
+</li>
+<li>
+<p>O tamanho da dimensão do histograma;</p>
+</li>
+<li>
+<p>O endereço da quantidade de barras do histograma;</p>
+</li>
+<li>
+<p>Variáveis que informam o comportamento do histograma (uniformidade, cumulativo)</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Ao trabalharmos com imagens coloridas, ou seja, que possuem matrizes representando cada uma das componentes RGB é comum realizar o cálculo do histograma de cada componente de forma separada por ser mais simples, uma vez que, para processar toda a imagem de uma vez seria necessário trabalhar com uma matriz de 256x256x256 elementos. Para realizar a separaçao de cada uma dos componentes utilizamos a função <em>split()</em>.</p>
@@ -1057,7 +1077,7 @@ A estratégia utilizada para detectar movimentos será realizar a comparação e
 <p>Antes de realizar o processo em si é necessário resolver um problema comum em algumas webcams integradas em notebooks que, ao serem iniciadas com o comando <em>cap.open(0)</em> , inciam com uma imagem bem escura e vaõ ajustando o brilho com o passar do tempo. Esse ajuste é necessário, pois se realizarmos a comparaçã ode histogramas a partir do momento em que a câmera é aberta, o próximo frame, com mais brilho, já terá uma diferença em seu histograma.</p>
 </div>
 <div class="paragraph">
-<p>Para evitar este problema adotou-se uma estratégia simples: criar um contador que, após o dispositivo de vídeo ser aberto, realizar 40 execuçoes do algoritmo, ou seja, realizar o cálculo do histograma dos 40 primeiros frames sem realizar qualquer tipo de comparação e, a partir do frame 41, onde a câmera já está com seu brilho devidamente ajustado, habilitar a região do código que executa a comparaçã oentre frames.</p>
+<p>Para evitar este problema adotou-se uma estratégia simples: criar um contador que, após o dispositivo de vídeo ser aberto, realizar 40 execuçoes do algoritmo, ou seja, realizar o cálculo do histograma dos 40 primeiros frames sem realizar qualquer tipo de comparação e, a partir do frame 41, onde a câmera já está com seu brilho devidamente ajustado, habilitar a região do código que executa a comparação entre frames.</p>
 </div>
 <div class="listingblock">
 <div class="title">Região do código responsável pela comparação de histogramas</div>
@@ -1082,13 +1102,27 @@ if(cont&gt;=40){
 	}</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>A função <a href="https://docs.opencv.org/2.4.13.7/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.html">compareHist()</a>, Própria do openCV realiza os cálculos de diferença entre os histogramas e possui três argumentos: Os dois histogramas a serem comparados e o método utilizado para tal. Os métodos aceitos para comparação são a Correlação, Distância Qui-quadrada, Interseção e Distância Bhattacharyya. No código desenvolvido utilizou-se  a Distância Qui-quadrada (CV_COMP_CHISQR), pois dentre os modelos disponíveis foi o que melhor se adequou a proposta.</p>
+</div>
+<div class="paragraph">
+<p>Um exemplo do funcionamento do programa <a href="/source_codes/motiondetector.cpp">motiondetector.cpp</a> pode ser visto no vídeo abaixo:</p>
+</div>
+<div class="videoblock">
+<div class="title">Execução do programa <em>motiondetector.cpp</em></div>
+<div class="content">
+<video src="/video/motion.mp4#t=0,16" width="640" autoplay controls>
+Your browser does not support the video tag.
+</video>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-09 23:02:00 -0300
+Last updated 2019-04-09 23:35:17 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">

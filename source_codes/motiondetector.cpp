@@ -36,7 +36,6 @@ int main(int argc, char** argv){
 
   while(alarm==0){
     cap >> image;
-		flip(image, image, 1);
     split (image, planes);
     calcHist(&planes[0], 1, 0, Mat(), histR, 1,
              &nbins, &histrange,
@@ -84,7 +83,6 @@ int main(int argc, char** argv){
 				double histCorrelation = compareHist( histR, histR_old, CV_COMP_CHISQR);
 				cout<<histCorrelation<<"\n";
 				if(histCorrelation > 75){
-					
 					alarm=1;	
 					hconcat(image_old,image,image);
 					cout<<"ALERT, DETECTED!!!\n";
