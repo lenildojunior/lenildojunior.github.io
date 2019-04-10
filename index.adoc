@@ -445,24 +445,23 @@ Para evitar este problema adotou-se uma estratégia simples: criar um contador q
 [source,cpp]
 ----
 cont++;
-		if(cont>36)cout<<"MOVE!!!!\n";
-		if(cont>=40){
-			if(histR_old.empty()==true){
-				histR_old = histR.clone();
-				image_old=image.clone();
-			}
-			else{
-				double histCorrelation = compareHist( histR, histR_old, CV_COMP_CHISQR);
-				cout<<histCorrelation<<"\n";
-				if(histCorrelation > 75){
-					
-					alarm=1;	
-					hconcat(image_old,image,image);
-					cout<<"ALERT, DETECTED!!!\n";
-					imshow("image", image);
-      		if(waitKey(10000) >= 0) break;
-				}
-			}
+if(cont>36)cout<<"MOVE!!!!\n";
+if(cont>=40){
+	if(histR_old.empty()==true){
+		histR_old = histR.clone();
+		image_old=image.clone();
+	}
+	else{
+		double histCorrelation = compareHist( histR, histR_old, CV_COMP_CHISQR);
+		cout<<histCorrelation<<"\n";
+		if(histCorrelation > 75){
+			alarm=1;	
+			hconcat(image_old,image,image);
+			cout<<"ALERT, DETECTED!!!\n";
+			imshow("image", image);
+      if(waitKey(10000) >= 0) break;
+		}
+	}
 ----
 
 
