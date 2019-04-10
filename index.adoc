@@ -467,6 +467,9 @@ if(cont>=40){
 
 A função https://docs.opencv.org/2.4.13.7/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.html[compareHist()], Própria do openCV realiza os cálculos de diferença entre os histogramas e possui três argumentos: Os dois histogramas a serem comparados e o método utilizado para tal. Os métodos aceitos para comparação são a Correlação, Distância Qui-quadrada, Interseção e Distância Bhattacharyya. No código desenvolvido utilizou-se  a Distância Qui-quadrada (CV_COMP_CHISQR), pois dentre os modelos disponíveis foi o que melhor se adequou a proposta.
 
+.Equação da Distância Qui-quadrada
+image::/image/dist.png[]
+
 Um exemplo do funcionamento do programa link:/source_codes/motiondetector.cpp[motiondetector.cpp] pode ser visto no vídeo abaixo:
 
 .Execução do programa _motiondetector.cpp_
