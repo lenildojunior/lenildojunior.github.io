@@ -635,5 +635,5 @@ image::/image/filtrooriginal.png[]
 .Aplicação do filtro Laplaciano
 image::/image/filtrolap.png[]
 
-.Aplicação dod filtro Laplaciano do Gaussiano
+.Aplicação do filtro Laplaciano do Gaussiano
 image::/image/filtrolapgauss.png[]
