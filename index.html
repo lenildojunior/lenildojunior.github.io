@@ -1162,13 +1162,161 @@ float laplacian[]={0,-1,0,
 					 0,-1,0};</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Dentro do programa, após selecionar o tipo de filtro a ser aplicado, a matriz correspondete será transformada em uma máscara, que será utilizada no processo de filtagem ddo frame capturado pela câmera. O trecho de código abaixo demonstra o uso do construtor da classe <a href="https://docs.opencv.org/3.1.0/d3/d63/classcv_1_1Mat.html"><em>Mat()</em></a> para definir a máscara.</p>
+</div>
+<div class="listingblock">
+<div class="title">Criando a máscara do filtro</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">mask = Mat(3, 3, CV_32F, laplacian);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O algoritmo possui um laço de repetição que sempre captura o frame do dispositivo de imagem, no caso a webcam integrada, e aplica a máscara selecionada. A seleção do tipo de filtro é realizado no momento em que o usuário informa uma letra com mostra o esquema abaixo.</p>
+</div>
+<div class="listingblock">
+<div class="title">Menu apresentando ao usuário para escolha do filtro</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">void menu(){
+  cout &lt;&lt; "\npressione a tecla para ativar o filtro: \n"
+	"a - calcular modulo\n"
+	"m - media\n"
+	"g - gauss\n"
+	"v - vertical\n"
+	"h - horizontal\n"
+	"l - laplaciano\n"
+	"x - laplaciano gaussiano\n"
+	"esc - sair\n";
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Trecho responsável pela filtragem ao escolher a opção 'l'</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">case 'l':
+		menu();
+		mask = Mat(3, 3, CV_32F, laplacian);
+		printmask(mask);
+		filter2D(frame32f, frameFiltered,
+		frame32f.depth(), mask, Point(1,1), 0);
+		if(absolut){
+			frameFiltered=abs(frameFiltered);
+		}
+		frameFiltered.convertTo(result, CV_8U);
+		break;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No código desenvolvido pelo autor, era necessário criar um novo filtro: Laplaciano do Gaussiano, que corresponde a aplicar primeiro o filtro Gaussiano e aplicar o filtro laplaciano no resultado.
+No código base, o processo de filtragem utilizando a função <a href="https://docs.opencv.org/2.4.13.7/doc/tutorials/imgproc/imgtrans/filter_2d/filter_2d.html"><em>filter2D()</em></a> ocorre dentro de cada <strong><em>case</em></strong>. Para realizar os filtros em cadeia, alterou-se o código de forma que o processo de filtragem ocorra sempre no início do <em>loop</em> e cada condicional é responsável por definir a variável <strong><em>mask</em></strong> a ser usada no filtro. Com isso, os condicionais possuem formato semelhante ao trecho de código</p>
+</div>
+<div class="listingblock">
+<div class="title">Criação da máscara ao selecionar a opção 'l'</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">case 'l':
+		menu();
+		lapgauss=0;
+		mask = Mat(3, 3, CV_32F, laplacian);
+		printmask(mask);
+		break;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A variável <em>lapgauss</em> funciona como uma flag para indicar se o filtro Laplaciano do Gaussiano está sendo utilizado. O valor 0 indica que não está em uso e o valor 1 indica o uso. Tal variável é necessária pois, como aplica-se filtros em cadeia a definição da máscara deste tipo de filtro está representado no código abaixo.</p>
+</div>
+<div class="listingblock">
+<div class="title">Criação da mpascara ao selecionar a opção 'x'</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">case 'x':
+		menu();
+		lapgauss=1;
+		mask = Mat(3, 3, CV_32F, gauss);
+		scaleAdd(mask, 1/16.0, Mat::zeros(3,3,CV_32F), mask1);
+		mask = mask1;
+		filter2D(frame32f, frameFiltered,frame32f.depth(), mask, Point(1,1), 0);
+		mask = Mat(3, 3, CV_32F, laplacian);
+		filter2D(frameFiltered, frameFilteredLapGauss,frameFiltered.depth(), mask, Point(1,1), 0);
+		break;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Os inicíos dos laços de repetição dos códigos <a href="https://agostinhobritojr.github.io/tutorial/pdi/exemplos/filtroespacial.cpp">base</a> e do <a href="/source_codes/lapgauss.cpp">lapgauss.cpp</a> podem ser vistos nos trechos abaixo.</p>
+</div>
+<div class="listingblock">
+<div class="title">Inicio do loop no código <em>filtroespacial.cpp</em></div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">menu();
+	for(;;){
+		video &gt;&gt; cap;
+		cvtColor(cap, frame, CV_BGR2GRAY);
+		flip(frame, frame, 1);
+		imshow("original", frame);
+		frame.convertTo(frame32f, CV_32F);
+		imshow("filtroespacial", result);
+		key = (char) waitKey(10);
+		if( key == 27 ) break; // esc pressed!
+		switch(key){</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Inicio do loop no código <em>lapgausse.cpp</em></div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">menu();
+	for(;;){
+		video &gt;&gt; cap;
+    cvtColor(cap, frame, CV_BGR2GRAY);
+    flip(frame, frame, 1);
+    imshow("original", frame);
+		frame.convertTo(frame32f, CV_32F);
+		if(lapgauss!=0){
+			if(absolut){
+      	frameFilteredLapGauss=abs(frameFilteredLapGauss);
+    	}
+    	frameFilteredLapGauss.convertTo(result, CV_8U);
+			imshow("filtroespacial", result);
+		}
+		else{
+    	filter2D(frame32f, frameFiltered,frame32f.depth(), mask, Point(1,1), 0);
+    	if(absolut){
+      	frameFiltered=abs(frameFiltered);
+    	}
+    	frameFiltered.convertTo(result, CV_8U);
+			imshow("filtroespacial", result);
+		}
+
+    key = (char) waitKey(10);
+    if( key == 27 ) break; // esc pressed!
+    switch(key){</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A execução do programa e comparação do resultados dos filtros pode ser vista nas imagens abaixo.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/filtrooriginal.png" alt="filtrooriginal">
+</div>
+<div class="title">Figure 22. Imagem original capturada</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/filtrolap.png" alt="filtrolap">
+</div>
+<div class="title">Figure 23. Aplicação do filtro Laplaciano</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/filtrolapgauss.png" alt="filtrolapgauss">
+</div>
+<div class="title">Figure 24. Aplicação dod filtro Laplaciano do Gaussiano</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-10 08:33:19 -0300
+Last updated 2019-04-10 11:57:35 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">
