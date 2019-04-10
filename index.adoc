@@ -470,4 +470,4 @@ A função https://docs.opencv.org/2.4.13.7/doc/tutorials/imgproc/histograms/his
 Um exemplo do funcionamento do programa link:/source_codes/motiondetector.cpp[motiondetector.cpp] pode ser visto no vídeo abaixo:
 
 .Execução do programa _motiondetector.cpp_
-video::/video/motion.mp4[width=640, height=480]
+video::K-F_GFqM4iY&feature=youtu.be[youtube]
