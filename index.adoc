@@ -871,8 +871,7 @@ switch(t){
 
 para que fosse possível realizar a comparação dos diferentes resultados de execução do algoritmo.
 
-Passando como entrada a figura
-
+.Imagem usada na entrada
 image::/image/Knitting-Balls.jpg[]
 
 o resultado pode ser visto abaixo
