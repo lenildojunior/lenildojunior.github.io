@@ -651,7 +651,7 @@ image::/image/homomorf.png[]
 
 === Detector de bordas de Canny
 
-O código desenvolvido que possui a combinação do pontilhismo com o detector de bordas de Canny pode ser encontrado em link:/source_codes/homomorfico.cpp[homomorfico.cpp].
+O código desenvolvido que possui a combinação do pontilhismo com o detector de bordas de Canny pode ser encontrado em link:/source_codes/cannypoints.cpp[cannypoints.cpp].
 
 As imagens abaixo representam, respectivamente, a imagem utilizada na entrada do programa, as bordas detectadas, a imagem pontilhista e a saída do algoritmo
 
