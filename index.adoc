@@ -638,9 +638,22 @@ image::/image/filtrolap.png[]
 .Aplicação do filtro Laplaciano do Gaussiano
 image::/image/filtrolapgauss.png[]
 
+:sectnums:
+
 == Projetos da Segunda Unidade
 
 === Filtro Homomórfico
+
+A filtragem homomórfica é um procedimento realizado no domínio da frequência para melhorar a aparência de uma imagem efetuando simultâneamente a compressão da faixa de intensidade e o realce do contraste. Baseia-se nos princípios de iliminância e reflectância de uma imagem, uma vez que, o componente de iluminação é caracterizado por variações espaciais suaves, enquanto o componente de reflectância tende a variar abruptamente, denotando as junções de diferentes objetos. Com isso, pode-se associar que as baixas frequências da transformada de Fourier do _log_ de uma imagem correspondem a iluminação e as altas com a reflectância.
+
+Para realizar este processo, é necessário utilizar um filtro passa-alta que possui o seguinte formato.
+
+.Equação do Filtro homomórfico
+image::/image/filtro.png[]
+
+Se os parâmetros do filtro forem ajustados corretamente, o resultado tende a atenuar a contribuição das baixas frequências (iluminação) e ampliar a contribuição das altas (reflectância).   
+
+                                        
 
 O código pode ser encontrado em link:/source_codes/homomorfico.cpp[homomorfico.cpp]
 

@@ -1326,6 +1326,21 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 <div class="sect2">
 <h3 id="_filtro_homomórfico">5.1. Filtro Homomórfico</h3>
 <div class="paragraph">
+<p>A filtragem homomórfica é um procedimento realizado no domínio da frequência para melhorar a aparência de uma imagem efetuando simultâneamente a compressão da faixa de intensidade e o realce do contraste. Baseia-se nos princípios de iliminância e reflectância de uma imagem, uma vez que, o componente de iluminação é caracterizado por variações espaciais suaves, enquanto o componente de reflectância tende a variar abruptamente, denotando as junções de diferentes objetos. Com isso, pode-se associar que as baixas frequências da transformada de Fourier do <em>log</em> de uma imagem correspondem a iluminação e as altas com a reflectância.</p>
+</div>
+<div class="paragraph">
+<p>Para realizar este processo, é necessário utilizar um filtro passa-alta que possui o seguinte formato.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/filtro.png" alt="filtro">
+</div>
+<div class="title">Figure 25. Equação do Filtro homomórfico</div>
+</div>
+<div class="paragraph">
+<p>Se os parâmetros do filtro forem ajustados corretamente, o resultado tende a atenuar a contribuição das baixas frequências (iluminação) e ampliar a contribuição das altas (reflectância).</p>
+</div>
+<div class="paragraph">
 <p>O código pode ser encontrado em <a href="/source_codes/homomorfico.cpp">homomorfico.cpp</a></p>
 </div>
 <div class="paragraph">
@@ -1335,7 +1350,7 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 <div class="content">
 <img src="/image/homomorf.png" alt="homomorf">
 </div>
-<div class="title">Figure 25. Saida do filtro homomórfico</div>
+<div class="title">Figure 26. Saida do filtro homomórfico</div>
 </div>
 </div>
 <div class="sect2">
@@ -1350,25 +1365,25 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 <div class="content">
 <img src="/image/mosaic.jpg" alt="mosaic">
 </div>
-<div class="title">Figure 26. Imagem de entrada</div>
+<div class="title">Figure 27. Imagem de entrada</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="/image/cannyborders.png" alt="cannyborders">
 </div>
-<div class="title">Figure 27. Bordas detectadas com o alogritmo de Canny</div>
+<div class="title">Figure 28. Bordas detectadas com o alogritmo de Canny</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="/image/pontos.jpg" alt="pontos">
 </div>
-<div class="title">Figure 28. Imagem pontilhista</div>
+<div class="title">Figure 29. Imagem pontilhista</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="/image/nova_arte.png" alt="nova arte">
 </div>
-<div class="title">Figure 29. Imagem de saida</div>
+<div class="title">Figure 30. Imagem de saida</div>
 </div>
 </div>
 <div class="sect2">
@@ -1383,7 +1398,7 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 <div class="content">
 <img src="/image/kmeans.gif" alt="kmeans">
 </div>
-<div class="title">Figure 30. Saida do programa</div>
+<div class="title">Figure 31. Saida do programa</div>
 </div>
 </div>
 </div>
@@ -1391,7 +1406,7 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-25 00:09:58 -0300
+Last updated 2019-05-25 11:46:10 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">
