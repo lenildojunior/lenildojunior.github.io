@@ -468,7 +468,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_filtro_homomórfico">5.1. Filtro Homomórfico</a></li>
 <li><a href="#_detector_de_bordas_de_canny">5.2. Detector de bordas de Canny</a></li>
-<li><a href="#_kmeans">5.3. Kmeans</a></li>
+<li><a href="#_quantização_vetorial_com_o_algoritmo_kmeans">5.3. Quantização vetorial com o algoritmo Kmeans</a></li>
 </ul>
 </li>
 </ul>
@@ -1516,12 +1516,182 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 </div>
 </div>
 <div class="sect2">
-<h3 id="_kmeans">5.3. Kmeans</h3>
+<h3 id="_quantização_vetorial_com_o_algoritmo_kmeans">5.3. Quantização vetorial com o algoritmo Kmeans</h3>
 <div class="paragraph">
-<p>O código pode ser encontrado em <a href="/source_codes/kmeans_exe.cpp">kmeans_exe.cpp</a></p>
+<p>Denomina-se de quantização vetorial o processo de, dado um grande conjunto de pontos, dividí-los em um grupo menor, chamado de cluster, onde cada um possui um elemento central que os representa, chamado de centróide.</p>
 </div>
 <div class="paragraph">
-<p>O resultado pode ser visto na imagem abaixo</p>
+<p>O Kmeans é um dos mais populares algoritmos deste segmento devido a sua simplicidade de implementação. A proposta, de um modo geral, é subdividir o espaço ao qual se está trabalhando em vários centros, que representarão os clusters e, a partir disso, calcular a distância de cada ponto nesse espaço para cada centro e o que possuir a menor distância será o grupo ao qual o ponto pertencerá.</p>
+</div>
+<div class="paragraph">
+<p>O algoritmo pode ser dividido em alguns passos:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>1 - Escolher a quantidade de <em>clusters</em> (classes) para classificar o conjunto de amostras fornecida;</p>
+</li>
+<li>
+<p>2 - Escolher aproximações iniciais das médias, que serão usadas como centro de cada <em>cluster</em>;</p>
+</li>
+<li>
+<p>3 - Classificar cada amostra do conjunto fornecido como pertencente a alguma classe, utilizando algum método de distância mínima;</p>
+</li>
+<li>
+<p>4 - Após classificar todas as amostras do conjunto, recalcular o valor de cada centro;</p>
+</li>
+<li>
+<p>5 - Caso a variação do valor das novas médias em relação as usadas anteriormente form menor que um limiar estabelecido, o algoritmo para. Senão continua a execução até atingir este critério ou o número máximo de execuções.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>No algoritmo desenvolvido para este exemplo, fixou-se o número de classes = 5 e que a execução será realizada uma por vez.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">int nClusters = 6;
+  Mat rotulos;
+  int nRodadas = 1;
+  Mat centros;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A matriz da imagem é lida em RGB e em seguida é armazenada de forma vetorial para ser passada para a função <em>kmeans()</em> do OpenCV.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">Mat img = imread( argv[1], CV_LOAD_IMAGE_COLOR);
+Mat samples(img.rows * img.cols, 3, CV_32F); <b class="conum">(1)</b>
+
+  for( int y = 0; y &lt; img.rows; y++ ){
+    for( int x = 0; x &lt; img.cols; x++ ){
+      for( int z = 0; z &lt; 3; z++){
+        samples.at&lt;float&gt;(y + x*img.rows, z) = img.at&lt;Vec3b&gt;(y,x)[z]; <b class="conum">(2)</b>
+	  	}
+		}
+  }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Definição do tamanho do vetor <em>samples</em>;</p>
+</li>
+<li>
+<p>Armazenar o valor dos pixels de cada uma das componentes (RGB), onde cada componente fica armazenada em uma coluna informada pela varriável <em>z</em>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>A execução o cálulo do kmeans é oferecido pelo OpenCV através da função <a href="https://docs.opencv.org/2.4/modules/core/doc/clustering.html?highlight=kmeans"><em>kmeans()</em></a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">kmeans(samples, <b class="conum">(1)</b>
+		 	nClusters, <b class="conum">(2)</b>
+		 	rotulos, <b class="conum">(3)</b>
+		 	TermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, 10000, 0.0001),<b class="conum">(4)</b>
+		 	nRodadas,<b class="conum">(5)</b>
+		 	KMEANS_RANDOM_CENTERS, <b class="conum">(6)</b>
+		 	centros ); <b class="conum">(7)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Vetor de amostras de entrada;</p>
+</li>
+<li>
+<p>Número de classes;</p>
+</li>
+<li>
+<p>Armazena a classe a qual o ponto analisado pertence;</p>
+</li>
+<li>
+<p>Critérios de parada. No caso, um máximo de 10000 interações ou tolerância de 0.0001;</p>
+</li>
+<li>
+<p>Quantidade de execuções do algoritmo;</p>
+</li>
+<li>
+<p>Centros escolhidos aleatoriamente;</p>
+</li>
+<li>
+<p>Matriz que armazena as coordenadas de cada centro.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Em seguida, cria-se uma nova matriz para montar a imagem devidamente rotulada após a execução do algoritmo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">for( int y = 0; y &lt; img.rows; y++ ){
+    	for( int x = 0; x &lt; img.cols; x++ ){
+	  		int indice = rotulos.at&lt;int&gt;(y + x*img.rows,0);
+	  		rotulada.at&lt;Vec3b&gt;(y,x)[0] = (uchar) centros.at&lt;float&gt;(indice, 0);
+	  		rotulada.at&lt;Vec3b&gt;(y,x)[1] = (uchar) centros.at&lt;float&gt;(indice, 1);
+	  		rotulada.at&lt;Vec3b&gt;(y,x)[2] = (uchar) centros.at&lt;float&gt;(indice, 2);
+			}
+  	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Esses dois trechos são executados inseridos dentro de um laço <em>for()</em> de forma que o mesmo algoritmo seja executado 10 vezes, permitindo que os centros sejam aleatórios, ou seja, que tendam a ser diferentes nas execuções. A trecho abaixo salva a imagem gerada a cada execução</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">switch(t){
+			case 0:
+  			imwrite("k_figure1.jpg", rotulada);
+				break;
+			case 1:
+  			imwrite("k_figure2.jpg", rotulada);
+				break;
+			case 2:
+  			imwrite("k_figure3.jpg", rotulada);
+				break;
+			case 3:
+  			imwrite("k_figure4.jpg", rotulada);
+				break;
+			case 4:
+  			imwrite("k_figure5.jpg", rotulada);
+				break;
+			case 5:
+  			imwrite("k_figure6.jpg", rotulada);
+				break;
+			case 6:
+  			imwrite("k_figure7.jpg", rotulada);
+				break;
+			case 7:
+  			imwrite("k_figure8.jpg", rotulada);
+				break;
+			case 8:
+  			imwrite("k_figure9.jpg", rotulada);
+				break;
+			case 9:
+  			imwrite("k_figure10.jpg", rotulada);
+				break;
+			default:
+				cout&lt;&lt;"nao foi";
+				break;
+		}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>para que fosse possível realizar a comparação dos diferentes resultados de execução do algoritmo.</p>
+</div>
+<div class="paragraph">
+<p>Passando como entrada a figura</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/Knitting-Balls.jpg" alt="Knitting Balls">
+</div>
+</div>
+<div class="paragraph">
+<p>o resultado pode ser visto abaixo</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1529,13 +1699,16 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 </div>
 <div class="title">Figure 32. Saida do programa</div>
 </div>
+<div class="paragraph">
+<p>O código pode ser encontrado em <a href="/source_codes/kmeans_exe.cpp">kmeans_exe.cpp</a></p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-25 13:34:30 -0300
+Last updated 2019-05-25 16:21:46 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">

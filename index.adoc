@@ -752,11 +752,132 @@ image::/image/pontos.jpg[]
 .Imagem de saida
 image::/image/nova_arte.png[]
 
-=== Kmeans
+=== Quantização vetorial com o algoritmo Kmeans
 
-O código pode ser encontrado em link:/source_codes/kmeans_exe.cpp[kmeans_exe.cpp]
+Denomina-se de quantização vetorial o processo de, dado um grande conjunto de pontos, dividí-los em um grupo menor, chamado de cluster, onde cada um possui um elemento central que os representa, chamado de centróide.
 
-O resultado pode ser visto na imagem abaixo
+O Kmeans é um dos mais populares algoritmos deste segmento devido a sua simplicidade de implementação. A proposta, de um modo geral, é subdividir o espaço ao qual se está trabalhando em vários centros, que representarão os clusters e, a partir disso, calcular a distância de cada ponto nesse espaço para cada centro e o que possuir a menor distância será o grupo ao qual o ponto pertencerá.
+
+O algoritmo pode ser dividido em alguns passos:
+
+* 1 - Escolher a quantidade de _clusters_ (classes) para classificar o conjunto de amostras fornecida;
+* 2 - Escolher aproximações iniciais das médias, que serão usadas como centro de cada _cluster_;
+* 3 - Classificar cada amostra do conjunto fornecido como pertencente a alguma classe, utilizando algum método de distância mínima;
+* 4 - Após classificar todas as amostras do conjunto, recalcular o valor de cada centro;
+* 5 - Caso a variação do valor das novas médias em relação as usadas anteriormente form menor que um limiar estabelecido, o algoritmo para. Senão continua a execução até atingir este critério ou o número máximo de execuções.
+
+No algoritmo desenvolvido para este exemplo, fixou-se o número de classes = 5 e que a execução será realizada uma por vez.
+
+[source,cpp]
+----
+int nClusters = 6;
+  Mat rotulos;
+  int nRodadas = 1;
+  Mat centros; 
+----
+
+A matriz da imagem é lida em RGB e em seguida é armazenada de forma vetorial para ser passada para a função _kmeans()_ do OpenCV.
+
+[source,cpp]
+----
+Mat img = imread( argv[1], CV_LOAD_IMAGE_COLOR);
+Mat samples(img.rows * img.cols, 3, CV_32F); <1>
+
+  for( int y = 0; y < img.rows; y++ ){
+    for( int x = 0; x < img.cols; x++ ){
+      for( int z = 0; z < 3; z++){
+        samples.at<float>(y + x*img.rows, z) = img.at<Vec3b>(y,x)[z]; <2>
+	  	}
+		}
+  }
+----
+<1> Definição do tamanho do vetor _samples_;
+<2> Armazenar o valor dos pixels de cada uma das componentes (RGB), onde cada componente fica armazenada em uma coluna informada pela varriável _z_.
+
+A execução o cálulo do kmeans é oferecido pelo OpenCV através da função link:https://docs.opencv.org/2.4/modules/core/doc/clustering.html?highlight=kmeans[_kmeans()_].
+
+[source,cpp]
+----
+kmeans(samples, <1>
+		 	nClusters, <2>
+		 	rotulos, <3>
+		 	TermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, 10000, 0.0001),<4>
+		 	nRodadas,<5>
+		 	KMEANS_RANDOM_CENTERS, <6>
+		 	centros ); <7>
+----
+<1> Vetor de amostras de entrada;
+<2> Número de classes;
+<3> Armazena a classe a qual o ponto analisado pertence;
+<4> Critérios de parada. No caso, um máximo de 10000 interações ou tolerância de 0.0001;
+<5> Quantidade de execuções do algoritmo;
+<6> Centros escolhidos aleatoriamente;
+<7> Matriz que armazena as coordenadas de cada centro.
+
+Em seguida, cria-se uma nova matriz para montar a imagem devidamente rotulada após a execução do algoritmo.
+
+[source,cpp]
+----
+for( int y = 0; y < img.rows; y++ ){
+    	for( int x = 0; x < img.cols; x++ ){ 
+	  		int indice = rotulos.at<int>(y + x*img.rows,0);
+	  		rotulada.at<Vec3b>(y,x)[0] = (uchar) centros.at<float>(indice, 0);
+	  		rotulada.at<Vec3b>(y,x)[1] = (uchar) centros.at<float>(indice, 1);
+	  		rotulada.at<Vec3b>(y,x)[2] = (uchar) centros.at<float>(indice, 2);
+			}
+  	}
+----
+
+Esses dois trechos são executados inseridos dentro de um laço _for()_ de forma que o mesmo algoritmo seja executado 10 vezes, permitindo que os centros sejam aleatórios, ou seja, que tendam a ser diferentes nas execuções. A trecho abaixo salva a imagem gerada a cada execução
+
+[source,cpp]
+----
+switch(t){
+			case 0:
+  			imwrite("k_figure1.jpg", rotulada);
+				break;
+			case 1:
+  			imwrite("k_figure2.jpg", rotulada);
+				break;
+			case 2:
+  			imwrite("k_figure3.jpg", rotulada);
+				break;
+			case 3:
+  			imwrite("k_figure4.jpg", rotulada);
+				break;
+			case 4:
+  			imwrite("k_figure5.jpg", rotulada);
+				break;
+			case 5:
+  			imwrite("k_figure6.jpg", rotulada);
+				break;
+			case 6:
+  			imwrite("k_figure7.jpg", rotulada);
+				break;
+			case 7:
+  			imwrite("k_figure8.jpg", rotulada);
+				break;
+			case 8:
+  			imwrite("k_figure9.jpg", rotulada);
+				break;
+			case 9:
+  			imwrite("k_figure10.jpg", rotulada);
+				break;
+			default:
+				cout<<"nao foi";
+				break;
+		}
+----
+
+para que fosse possível realizar a comparação dos diferentes resultados de execução do algoritmo.
+
+Passando como entrada a figura
+
+image::/image/Knitting-Balls.jpg[]
+
+o resultado pode ser visto abaixo
 
 .Saida do programa
 image::/image/kmeans.gif[]
+
+O código pode ser encontrado em link:/source_codes/kmeans_exe.cpp[kmeans_exe.cpp]
