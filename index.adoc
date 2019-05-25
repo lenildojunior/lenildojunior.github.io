@@ -651,22 +651,35 @@ Para realizar este processo, é necessário utilizar um filtro passa-alta que po
 .Equação do Filtro homomórfico
 image::/image/filtro.png[]
 
-Se os parâmetros do filtro forem ajustados corretamente, o resultado tende a atenuar a contribuição das baixas frequências (iluminação) e ampliar a contribuição das altas (reflectância).   
+Se os parâmetros do filtro forem ajustados corretamente, o resultado tende a atenuar a contribuição das baixas frequências (iluminação) e ampliar a contribuição das altas (reflectância). Para obter tal resultado, faz-se necessário que os parâmetros esteja configurados da seguinte forma: 
+
+* _gamaL_ < 1;
+* _gamaH_ > 1;
 
 Para implementar o algoritmo que realiza a filtragem homomŕofica, tomou-se como base o código link:https://agostinhobritojr.github.io/tutorial/pdi/exemplos/dft.cpp[dft.cpp].
+
+Os parâmetros utilizados para a execução do algoritmo foram : 
+
+* _gamaH_ = 3.0;
+* _gamaL_ = 0.5;
+* _freqCorte_ = 5.0;
+* _varC_ = 0.8; 
+
 O filtro implementado pode ser visto no trecho de código
 
 [source,cpp]
 ----
   for(int i=0; i<dft_M; i++){
     for(int j=0; j<dft_N; j++){
-			varD = (i-dft_M/2)*(i-dft_M/2)+(j-dft_N/2)*(j-dft_N/2); //<1>
-    	tmp.at<float> (i,j) = (gamaH - gamaL)*(1-exp(-varC*((varD*varD) / (freqCorte*freqCorte)))) + gamaL; //<2>
+			varD = (i-dft_M/2)*(i-dft_M/2)+(j-dft_N/2)*(j-dft_N/2); <1>
+    	tmp.at<float> (i,j) = (gamaH - gamaL)*(1-exp(-varC*((varD*varD) / (freqCorte*freqCorte)))) + gamaL; <2>
     }
   }
 ----
 <1> Cálculo da distância do ponto (i,j) até a origem da transformada
 <2> Equação do Filtro aplicada a cada ponto (i,j)
+
+O algoritmo realiza a leitura da imagem, que deve ser passada no interior da função _imaread()_.
 
 O resultado da execução do algoritmo link:/source_codes/homomorfico.cpp[homomorfico.cpp] pode ser observado na sequência de imagens abaixo
 
@@ -677,6 +690,51 @@ image::/image/cam.jpg[]
 image::/image/homomorf.png[]
 
 === Detector de bordas de Canny
+
+O algoritmo de detecçao de bordas de Canny é um dos mais rápidos e eficientes para encontrar descontinuidades em uma imagem. Uma visão geral de como ele opera pode ser encontrada em https://agostinhobritojr.github.io/tutorial/pdi/#_detecção_de_bordas_com_o_algoritmo_de_canny[Detecção de bordas com o algoritmo de Canny].
+
+A proposta do algoritmo a ser desenvolvido é: dada uma imagem, combinar os efeitos do pontilhismo com o algoritmo de Canny para criar efeitos na imagem pontilhista.
+
+Tomando como base os códigos link:https://agostinhobritojr.github.io/tutorial/pdi/exemplos/canny.cpp[canny.cpp] e link:https://agostinhobritojr.github.io/tutorial/pdi/exemplos/pontilhismo.cpp[pontilhismo.cpp] desenvolveu-se o link:/source_codes/cannypoints.cpp[cannypoints.cpp].
+
+O primeiro passo foi determinar o valor doo limiar a ser utilizado no algoritmo de Canny para que as bordas encontradas representassem a imagem de forma a nem perder informação e nem poluir a imagem com bordas que não definem a forma do objeto analisado. Após alguns testes assumiu-se que po limiar _T2_ (inferior) deveria ser 40 e, adotando o recomendado pela literatura, _T1_ = 3*_T2_. O OpenCV possui a função _Canny()_ que executa o algoritmo e retorna as informações de borda.
+
+.Execução do Algoritmo de Canny
+[source,cpp]
+----
+namedWindow("canny",1);
+	Canny(image, border, 40, 120);
+	imshow("canny", border);
+  waitKey();
+  imwrite("cannyborders.png", border);
+----
+A imagem gerada pelo algoritmo de Canny possui o fundo preto (0) e os demais pixels com valores diferentes disto, representando as bordas.
+
+O próximo passo é gerar a imagem pontilhista, conforme o código utilizado como base, e a partir dela gerar os ajustes. A idéia é analisar a imagem de _cannyborders.png_ e verificar o valor do pixel em cada ponto em busca dos pixels refentes as bordas. Caso seja encontrado um pixel de borda, inserir na imagem pontilhista um círculo com o mesmo valor da imagem original nesta mesma posição. Esse procedimento pode ser observado no trecho abaixo.
+
+[source,cpp]
+----
+	newImage = points.clone(); <1>
+  for(int i=0;i<height;i++){
+    //random_shuffle(yrange.begin(), yrange.end());
+    for(int j=0;j<width;j++){
+			if(border.at<int> (i,j) !=0){//encontrou um pixel de borda
+				valorPixel = image.at<uchar> (i,j); <2>
+				 circle(newImage, <3>
+             cv::Point(j,i),<4>
+             RAIO , <5>
+             CV_RGB(valorPixel,valorPixel,valorPixel), <6>
+             -1,
+  	           CV_AA);
+			}
+		}
+----
+<1> Criar uma cópia da imagem pontilhista que irá receber os novo círculos
+<2> Armazenando o valor do pixel da posição (i,j) da imagem original
+<3> Imagem onde a função _circle()_ irá operar
+<4> Ponto de início do Circulo
+<5> Raio do Círculo a ser desenhado
+<6> Valores em RGB que represetam a cor de preenchimento do círculo
 
 O código desenvolvido que possui a combinação do pontilhismo com o detector de bordas de Canny pode ser encontrado em link:/source_codes/cannypoints.cpp[cannypoints.cpp].
 
