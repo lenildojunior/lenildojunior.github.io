@@ -1341,16 +1341,43 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 <p>Se os parâmetros do filtro forem ajustados corretamente, o resultado tende a atenuar a contribuição das baixas frequências (iluminação) e ampliar a contribuição das altas (reflectância).</p>
 </div>
 <div class="paragraph">
-<p>O código pode ser encontrado em <a href="/source_codes/homomorfico.cpp">homomorfico.cpp</a></p>
+<p>Para implementar o algoritmo que realiza a filtragem homomŕofica, tomou-se como base o código <a href="https://agostinhobritojr.github.io/tutorial/pdi/exemplos/dft.cpp">dft.cpp</a>.
+O filtro implementado pode ser visto no trecho de código</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">  for(int i=0; i&lt;dft_M; i++){
+    for(int j=0; j&lt;dft_N; j++){
+			varD = (i-dft_M/2)*(i-dft_M/2)+(j-dft_N/2)*(j-dft_N/2); //<b class="conum">(1)</b>
+    	tmp.at&lt;float&gt; (i,j) = (gamaH - gamaL)*(1-exp(-varC*((varD*varD) / (freqCorte*freqCorte)))) + gamaL; //<b class="conum">(2)</b>
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Cálculo da distância do ponto (i,j) até a origem da transformada</p>
+</li>
+<li>
+<p>Equação do Filtro aplicada a cada ponto (i,j)</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>O resultado pode ser observado na imagem abaixo, onde a da esquerda é a imagem utilizada na entrada (mal iluminada) e a sua direita a imagem após passar pelo filtro.</p>
+<p>O resultado da execução do algoritmo <a href="/source_codes/homomorfico.cpp">homomorfico.cpp</a> pode ser observado na sequência de imagens abaixo</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/cam.jpg" alt="cam">
+</div>
+<div class="title">Figure 26. Imagem utilizada na entrada</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="/image/homomorf.png" alt="homomorf">
 </div>
-<div class="title">Figure 26. Saida do filtro homomórfico</div>
+<div class="title">Figure 27. Saida do filtro homomórfico(imagem da direita)</div>
 </div>
 </div>
 <div class="sect2">
@@ -1365,25 +1392,25 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 <div class="content">
 <img src="/image/mosaic.jpg" alt="mosaic">
 </div>
-<div class="title">Figure 27. Imagem de entrada</div>
+<div class="title">Figure 28. Imagem de entrada</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="/image/cannyborders.png" alt="cannyborders">
 </div>
-<div class="title">Figure 28. Bordas detectadas com o alogritmo de Canny</div>
+<div class="title">Figure 29. Bordas detectadas com o alogritmo de Canny</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="/image/pontos.jpg" alt="pontos">
 </div>
-<div class="title">Figure 29. Imagem pontilhista</div>
+<div class="title">Figure 30. Imagem pontilhista</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="/image/nova_arte.png" alt="nova arte">
 </div>
-<div class="title">Figure 30. Imagem de saida</div>
+<div class="title">Figure 31. Imagem de saida</div>
 </div>
 </div>
 <div class="sect2">
@@ -1398,7 +1425,7 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 <div class="content">
 <img src="/image/kmeans.gif" alt="kmeans">
 </div>
-<div class="title">Figure 31. Saida do programa</div>
+<div class="title">Figure 32. Saida do programa</div>
 </div>
 </div>
 </div>
@@ -1406,7 +1433,7 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-25 11:46:10 -0300
+Last updated 2019-05-25 12:04:01 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">

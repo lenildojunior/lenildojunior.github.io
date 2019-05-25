@@ -653,13 +653,27 @@ image::/image/filtro.png[]
 
 Se os parâmetros do filtro forem ajustados corretamente, o resultado tende a atenuar a contribuição das baixas frequências (iluminação) e ampliar a contribuição das altas (reflectância).   
 
-                                        
+Para implementar o algoritmo que realiza a filtragem homomŕofica, tomou-se como base o código link:https://agostinhobritojr.github.io/tutorial/pdi/exemplos/dft.cpp[dft.cpp].
+O filtro implementado pode ser visto no trecho de código
 
-O código pode ser encontrado em link:/source_codes/homomorfico.cpp[homomorfico.cpp]
+[source,cpp]
+----
+  for(int i=0; i<dft_M; i++){
+    for(int j=0; j<dft_N; j++){
+			varD = (i-dft_M/2)*(i-dft_M/2)+(j-dft_N/2)*(j-dft_N/2); //<1>
+    	tmp.at<float> (i,j) = (gamaH - gamaL)*(1-exp(-varC*((varD*varD) / (freqCorte*freqCorte)))) + gamaL; //<2>
+    }
+  }
+----
+<1> Cálculo da distância do ponto (i,j) até a origem da transformada
+<2> Equação do Filtro aplicada a cada ponto (i,j)
 
-O resultado pode ser observado na imagem abaixo, onde a da esquerda é a imagem utilizada na entrada (mal iluminada) e a sua direita a imagem após passar pelo filtro.
+O resultado da execução do algoritmo link:/source_codes/homomorfico.cpp[homomorfico.cpp] pode ser observado na sequência de imagens abaixo
 
-.Saida do filtro homomórfico
+.Imagem utilizada na entrada
+image::/image/cam.jpg[]
+
+.Saida do filtro homomórfico(imagem da direita)
 image::/image/homomorf.png[]
 
 === Detector de bordas de Canny
