@@ -637,3 +637,41 @@ image::/image/filtrolap.png[]
 
 .Aplicação do filtro Laplaciano do Gaussiano
 image::/image/filtrolapgauss.png[]
+
+== Projetos da Segunda Unidade
+
+=== Filtro Homomórfico
+
+O código pode ser encontrado em link:/source_codes/homomorfico.cpp[homomorfico.cpp]
+
+O resultado pode ser observado na imagem abaixo, onde a da esquerda é a imagem utilizada na entrada (mal iluminada) e a sua direita a imagem após passar pelo filtro.
+
+.Saida do filtro homomórfico
+image::/image/homomorf.png[]
+
+=== Detector de bordas de Canny
+
+O código desenvolvido que possui a combinação do pontilhismo com o detector de bordas de Canny pode ser encontrado em link:/source_codes/homomorfico.cpp[homomorfico.cpp].
+
+As imagens abaixo representam, respectivamente, a imagem utilizada na entrada do programa, as bordas detectadas, a imagem pontilhista e a saída do algoritmo
+
+.Imagem de entrada
+image::/image/mosaic.jpg[]
+
+.Bordas detectadas com o alogritmo de Canny
+image::/image/cannyborders.png[]
+
+.Imagem pontilhista
+image::/image/pontos.jpg[]
+
+.Imagem de saida
+image::/image/nova_arte.png[]
+
+=== Kmeans
+
+O código pode ser encontrado em link:/source_codes/kmeans_exe.cpp[kmeans_exe.cpp]
+
+O resultado pode ser visto na imagem abaixo
+
+.Saida do programa
+image::/image/kmeans.gif[]

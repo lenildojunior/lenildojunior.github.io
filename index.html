@@ -464,6 +464,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_filtro_laplaciano_do_gaussiano">4.1. Filtro Laplaciano do Gaussiano</a></li>
 </ul>
 </li>
+<li><a href="#_projetos_da_segunda_unidade">5. Projetos da Segunda Unidade</a>
+<ul class="sectlevel2">
+<li><a href="#_filtro_homomórfico">5.1. Filtro Homomórfico</a></li>
+<li><a href="#_detector_de_bordas_de_canny">5.2. Detector de bordas de Canny</a></li>
+<li><a href="#_kmeans">5.3. Kmeans</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1313,10 +1320,78 @@ No código base, o processo de filtragem utilizando a função <a href="https://
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_projetos_da_segunda_unidade">5. Projetos da Segunda Unidade</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_filtro_homomórfico">5.1. Filtro Homomórfico</h3>
+<div class="paragraph">
+<p>O código pode ser encontrado em <a href="/source_codes/homomorfico.cpp">homomorfico.cpp</a></p>
+</div>
+<div class="paragraph">
+<p>O resultado pode ser observado na imagem abaixo, onde a da esquerda é a imagem utilizada na entrada (mal iluminada) e a sua direita a imagem após passar pelo filtro.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/homomorf.png" alt="homomorf">
+</div>
+<div class="title">Figure 25. Saida do filtro homomórfico</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_detector_de_bordas_de_canny">5.2. Detector de bordas de Canny</h3>
+<div class="paragraph">
+<p>O código desenvolvido que possui a combinação do pontilhismo com o detector de bordas de Canny pode ser encontrado em <a href="/source_codes/homomorfico.cpp">homomorfico.cpp</a>.</p>
+</div>
+<div class="paragraph">
+<p>As imagens abaixo representam, respectivamente, a imagem utilizada na entrada do programa, as bordas detectadas, a imagem pontilhista e a saída do algoritmo</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/mosaic.jpg" alt="mosaic">
+</div>
+<div class="title">Figure 26. Imagem de entrada</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/cannyborders.png" alt="cannyborders">
+</div>
+<div class="title">Figure 27. Bordas detectadas com o alogritmo de Canny</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/pontos.jpg" alt="pontos">
+</div>
+<div class="title">Figure 28. Imagem pontilhista</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/nova_arte.png" alt="nova arte">
+</div>
+<div class="title">Figure 29. Imagem de saida</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kmeans">5.3. Kmeans</h3>
+<div class="paragraph">
+<p>O código pode ser encontrado em <a href="/source_codes/kmeans_exe.cpp">kmeans_exe.cpp</a></p>
+</div>
+<div class="paragraph">
+<p>O resultado pode ser visto na imagem abaixo</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/image/kmeans.gif" alt="kmeans">
+</div>
+<div class="title">Figure 30. Saida do programa</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-10 12:00:07 -0300
+Last updated 2019-05-25 00:04:45 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">
